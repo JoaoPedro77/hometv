@@ -1,22 +1,36 @@
-<script setup>
-const search = ref('Batman')
-const idtag = ref('')
+<script setup lang="ts">
+import FilmeCard from '~/components/filmeCard.vue'
+import type { RespOMDb } from '~/types/index'
 
-const { data } = await useFetch('https://www.omdbapi.com/', {
-  query: {
-    apikey: 'ea31fccd',
-    s: search,
-    i: idtag
-  }
+const categorias = [
+  { titulo: 'Filmes do Batman', busca: 'Batman' },
+  { titulo: 'Filmes do Homem-Aranha', busca: 'Spider-Man' },
+  { titulo: 'Vingadores', busca: 'Avengers' },
+  { titulo: 'Filmes irados', busca: 'movie' }
+]
+
+const { data } = await useAsyncData('home', async () => {
+  const promessas = categorias.map(categoria =>
+    $fetch<RespOMDb>('https://www.omdbapi.com/', {
+      query: {
+        apikey: 'ea31fccd',
+        s: categoria.busca,
+        type: 'movie'
+      }
+    })
+  )
+  const resultados = await Promise.all(promessas)
+
+  return categorias.map((cat, index) => ({
+    titulo: cat.titulo,
+    filmes: resultados[index]?.Search || []
+  }))
 })
-
-const filmes = computed(() => data.value.Search || [])
 </script>
 
 <template>
   <div>
     <UPageHero
-      description="O lar do gerenciamento de filmes e séries"
       :links="[{
         label: 'Minha lista',
         to: '/minha-lista',
@@ -48,23 +62,31 @@ const filmes = computed(() => data.value.Search || [])
           </h1>
         </div>
       </template>
+      <template #description>
+        <p class="text-lg dark:text-white/90 text-black">
+          {{ "O lar do gerenciamento de filmes e séries" }}
+        </p>
+      </template>
     </UPageHero>
 
-    <div class="my-10 mx-4 space-y-3">
+    <div
+      v-for="(secao, index) in data"
+      :key="index"
+      class="my-10 mx-4 space-y-3"
+    >
       <separaSecao
-        titulo="Descubra novos Filmes"
+        :titulo="secao.titulo"
       />
       <UCarousel
         v-slot="{ item }"
-        :items="filmes"
+        :items="secao.filmes"
         class=" select-none w-full"
-        :ui="{ item: 'basis-1/5' }"
+        :ui="{ item: 'basis-1/2 md:basis-1/3 lg:basis-1/5' }"
         loop
       >
-        <CardFilme
+        <FilmeCard
           class="hover:scale-104 transition-all duration-200"
-          :titulo="item.Title"
-          :imagem="item.Poster"
+          :filme="item"
         />
       </UCarousel>
     </div>

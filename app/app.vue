@@ -25,7 +25,9 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UHeader>
+    <UHeader
+      :toggle-side="false"
+    >
       <template #left>
         <NuxtLink to="/">
           <div class="flex items-center gap-2">
@@ -46,15 +48,6 @@ useSeoMeta({
 
       <template #right>
         <UColorModeButton />
-
-        <UButton
-          to="https://github.com/JoaoPedro77"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
       </template>
     </UHeader>
 
