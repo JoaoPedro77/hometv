@@ -20,17 +20,17 @@ const estado = computed({
 
 <template>
   <div>
-    <UPageCard
+    <UCard
       variant="soft"
-      class="m-2"
+      class="p-4 w-full flex"
     >
-      <template #body>
+      <template #default>
         <div class="flex flex-row justify-center items-center gap-2">
           <NuxtImg
             :src="filme.Poster"
             alt="imagem de capa"
             placeholder="/placeholder.png"
-            class="w-30  rounded-lg"
+            class="w-20 sm:w-30  rounded-lg"
             loading="lazy"
           />
           <div class="flex flex-col justify-center items-start gap-2">
@@ -61,6 +61,6 @@ const estado = computed({
           </div>
         </div>
       </template>
-    </UPageCard>
+    </UCard>
   </div>
 </template>

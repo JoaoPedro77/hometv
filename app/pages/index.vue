@@ -5,6 +5,7 @@ import type { RespOMDb } from '~/types/index'
 const categorias = [
   { titulo: 'Filmes do Batman', busca: 'Batman' },
   { titulo: 'Filmes do Homem-Aranha', busca: 'Spider-Man' },
+  { titulo: 'Series Pokemon', busca: 'pokemon', type: 'series' },
   { titulo: 'Vingadores', busca: 'Avengers' },
   { titulo: 'Filmes irados', busca: 'movie' }
 ]
@@ -15,7 +16,7 @@ const { data } = await useAsyncData('home', async () => {
       query: {
         apikey: 'ea31fccd',
         s: categoria.busca,
-        type: 'movie'
+        type: categoria.type
       }
     })
   )

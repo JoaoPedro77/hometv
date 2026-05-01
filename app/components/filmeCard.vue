@@ -6,21 +6,26 @@ const props = defineProps<{
 }>()
 
 const store = useListaStore()
+const abriuModal = ref(false)
 
-const nota = computed({
-  get: () => props.filme.Nota,
-  set: val => store.alterarNota(props.filme.imdbID, val!)
-})
+const { data: detalhesFilme } = await useFetch('https://www.omdbapi.com/', {
+  query: {
+    apikey: 'ea31fccd',
+    i: props.filme.imdbID
+  },
+  watch: [abriuModal],
+  immediate: false,
+  lazy: true
+}) as { data: Ref<Filme> }
 
-const estado = computed({
-  get: () => props.filme.Estado,
-  set: val => store.alterarEstado(props.filme.imdbID, val!)
-})
+const nota = ref(store.lista.find(f => f.imdbID === props.filme.imdbID)?.Nota)
+
+const estado = ref(store.lista.find(f => f.imdbID === props.filme.imdbID)?.Estado)
 </script>
 
 <template>
   <div>
-    <UModal>
+    <UModal v-model:open="abriuModal">
       <UCard
         variant="soft"
         class="m-2"
@@ -49,44 +54,76 @@ const estado = computed({
       </UCard>
 
       <template #content>
-        <div class="flex flex-row justify-center items-center gap-2">
-          <NuxtImg
-            :src="filme.Poster"
-            alt="imagem de capa"
-            placeholder="/placeholder.png"
-            class="w-30  rounded-lg"
-            loading="lazy"
-          />
-          <div class="flex flex-col justify-center items-start gap-2">
-            <h2 class="text-md font-bold">
-              {{ filme.Title }}
-            </h2>
-            <div class="flex items-center gap-2">
-              <UIcon name="solar:calendar-bold-duotone" />
-              <span class="text-sm text-white/60">{{ filme.Year }}</span>
+        <div class="p-5 flex flex-col justify-center items-center gap-2">
+          <div class="pb-5 flex flex-row w-full justify-center items-center gap-2">
+            <NuxtImg
+              :src="filme.Poster"
+              alt="imagem de capa"
+              placeholder="/placeholder.png"
+              class="w-30  rounded-lg"
+              loading="lazy"
+            />
+            <div class="flex flex-col justify-center items-start gap-2">
+              <h2 class="text-md font-bold">
+                {{ filme.Title }}
+              </h2>
+              <div class="flex items-center gap-2">
+                <UIcon name="solar:calendar-bold-duotone" />
+                <span class="text-sm text-white/60">{{ filme.Year }}</span>
+              </div>
+              <USeparator />
+              <div class="flex gap-2">
+                <UIcon
+                  name="solar:info-circle-bold"
+                  class="shrink-0"
+                />
+                <span class="text-sm text-white/60"> {{ detalhesFilme?.Plot }}</span>
+              </div>
+              <USeparator />
+              <div class="flex items-center gap-2">
+                <UIcon name="solar:medal-ribbons-star-bold-duotone" />
+                Nota:
+                <USelect
+                  v-model="nota"
+                  :items="store.possiveisNotas"
+                  :default-value="store.possiveisNotas[0]"
+                />
+              </div>
+              <div class="flex items-center gap-2">
+                <UIcon name="solar:tv-bold-duotone" />
+                Estado:
+                <USelect
+                  v-model="estado"
+                  :items="store.possiveisEstados"
+                  :default-value="store.possiveisEstados[0]?.value"
+                />
+              </div>
             </div>
-            <USeparator />
-            <div class="flex items-center gap-2">
-              <UIcon name="solar:text-bold-duotone" />
-              <span class="text-sm text-white/60">Sinopse: {{ filme.Plot }}</span>
-            </div>
-            <USeparator />
-            <div class="flex items-center gap-2">
-              <UIcon name="solar:medal-ribbons-star-bold-duotone" />
-              Nota:
-              <USelect
-                v-model="nota"
-                :items="store.possiveisNotas"
-              />
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon name="solar:tv-bold-duotone" />
-              Estado:
-              <USelect
-                v-model="estado"
-                :items="store.possiveisEstados"
-              />
-            </div>
+          </div>
+          <div class="flex justify-center items-center gap-2">
+            <UButton
+              v-if="!store.estaNaLista(filme.imdbID)"
+              label="Adicionar"
+              icon="solar:stars-bold-duotone"
+              color="primary"
+              variant="soft"
+              @click="store.add(filme, estado || 'quero_ver', nota || '-'); abriuModal = false"
+            />
+            <UButton
+              v-else
+              label="Alterar"
+              icon="solar:pen-2-bold-duotone"
+              color="primary"
+              variant="soft"
+              @click="store.alterarEstado(filme.imdbID, estado || 'quero_ver'); store.alterarNota(filme.imdbID, nota || '-'); abriuModal = false"
+            />
+            <UButton
+              label="Cancelar"
+              color="neutral"
+              variant="subtle"
+              icon="solar:close-circle-line-duotone"
+              @click="abriuModal = false"
+            />
           </div>
         </div>
       </template>

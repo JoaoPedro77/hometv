@@ -11,11 +11,11 @@ export const useListaStore = defineStore('lista', () => {
     { label: 'Pausado', value: 'pausado' }
   ]
 
-  function add(filme: Filme) {
+  function add(filme: Filme, Estado: 'quero_ver' | 'assistindo' | 'terminado' | 'pausado', Nota: string) {
     if (estaNaLista(filme.imdbID)) {
       throw new Error('O filme já está na sua lista!')
     }
-    lista.value = [...lista.value, { ...filme, Estado: 'quero_ver', Nota: ' - ' }]
+    lista.value = [...lista.value, { ...filme, Estado, Nota }]
   }
 
   function estaNaLista(imdbID: string) {
