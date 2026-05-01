@@ -55,7 +55,7 @@ const estado = ref(store.lista.find(f => f.imdbID === props.filme.imdbID)?.Estad
 
       <template #content>
         <div class="p-5 flex flex-col justify-center items-center gap-2">
-          <div class="pb-5 flex flex-row w-full justify-center items-center gap-2">
+          <div class="pb-5 flex flex-col sm:flex-row w-full justify-center items-center gap-2">
             <NuxtImg
               :src="filme.Poster"
               alt="imagem de capa"

@@ -26,31 +26,38 @@ function Pesquisar() {
       <UIcon name="solar:clipboard-list-bold-duotone" />
       Pesquisar Filmes
     </h1>
-    <UForm @submit="Pesquisar">
-      <div class="flex flex-row justify-center items-center gap-2">
+    <UForm
+      class="w-full p-4"
+      @submit="Pesquisar"
+    >
+      <div class="flex w-full flex-row justify-center items-center gap-2">
         <UInput
           v-model="pesquisa"
           placeholder="Pesquisar filmes..."
           size="xl"
-          class="w-4xl"
+          class="w-full  md:w-4xl"
           variant="subtle"
           color="primary"
+          autofocus
         />
         <UButton
           type="submit"
-          label="Pesquisar"
           icon="solar:magnifer-linear"
           color="primary"
           variant="subtle"
           size="xl"
-        />
+        >
+          <span class="hidden md:flex">Pesquisar</span>
+        </UButton>
       </div>
     </UForm>
-    <FilmeCard
-      v-for="item in filmes"
-      :key="item.imdbID"
-      class="hover:scale-104 transition-all duration-200"
-      :filme="item"
-    />
+    <div class="flex flex-row flex-wrap justify-center items-center gap-2 mt-8">
+      <FilmeCard
+        v-for="item in filmes"
+        :key="item.imdbID"
+        class="hover:scale-104 w-70 transition-all duration-200"
+        :filme="item"
+      />
+    </div>
   </div>
 </template>
