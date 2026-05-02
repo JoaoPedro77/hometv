@@ -82,7 +82,10 @@ const { data } = await useAsyncData('home', async () => {
         v-slot="{ item }"
         :items="secao.filmes"
         class=" select-none w-full"
-        :ui="{ item: 'basis-1/2 md:basis-1/3 lg:basis-1/5' }"
+        :ui="{
+          item: 'basis-1/2 md:basis-1/3 lg:basis-1/5',
+          viewport: 'overflow-hidden'
+        }"
         loop
       >
         <FilmeCard

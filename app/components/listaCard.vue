@@ -8,12 +8,12 @@ const props = defineProps<{
 }>()
 
 const nota = computed({
-  get: () => props.filme.Nota,
+  get: () => props.filme.nota,
   set: val => store.alterarNota(props.filme.imdbID, val!)
 })
 
 const estado = computed({
-  get: () => props.filme.Estado,
+  get: () => props.filme.estado,
   set: val => store.alterarEstado(props.filme.imdbID, val!)
 })
 </script>

@@ -18,9 +18,9 @@ const { data: detalhesFilme } = await useFetch('https://www.omdbapi.com/', {
   lazy: true
 }) as { data: Ref<Filme> }
 
-const nota = ref(store.lista.find(f => f.imdbID === props.filme.imdbID)?.Nota)
+const nota = ref(store.lista.find((f: Filme) => f.imdbID === props.filme.imdbID)?.nota)
 
-const estado = ref(store.lista.find(f => f.imdbID === props.filme.imdbID)?.Estado)
+const estado = ref(store.lista.find((f: Filme) => f.imdbID === props.filme.imdbID)?.estado)
 </script>
 
 <template>
