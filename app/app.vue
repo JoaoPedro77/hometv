@@ -25,9 +25,7 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UHeader
-      :toggle-side="false"
-    >
+    <UHeader :toggle="false">
       <template #left>
         <NuxtLink to="/">
           <div class="flex items-center gap-2">
